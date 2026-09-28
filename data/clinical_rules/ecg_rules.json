@@ -1,0 +1,76 @@
+{
+  "_schema": {
+    "version": "1.0",
+    "description": "Clinical rule base for PTB-XL ECG super-classes. Each entry is the ONLY authorised source of facts for the generated report. Rules are generic, educational descriptions of standard ECG findings; they are NOT patient-specific medical advice.",
+    "required_fields": [
+      "class_id",
+      "name",
+      "full_name",
+      "category",
+      "description",
+      "ecg_signs",
+      "urgency",
+      "action"
+    ],
+    "categories": [
+      "normal",
+      "ischemic",
+      "repolarisation",
+      "conduction",
+      "structural"
+    ],
+    "disclaimer": "Research and demonstration only. Not for clinical diagnosis. Any ECG interpretation must be confirmed by a qualified clinician."
+  },
+  "entries": [
+    {
+      "class_id": "NORM",
+      "name": "Normal ECG",
+      "full_name": "Normal electrocardiogram",
+      "category": "normal",
+      "description": "The recording shows no abnormality among the diagnostic categories covered by this system. Rhythm, conduction intervals, QRS morphology and repolarisation all fall within expected limits.",
+      "ecg_signs": "Regular sinus rhythm with a P wave preceding each QRS complex, normal PR and QRS durations, and no significant ST-segment or T-wave deviation.",
+      "urgency": "No urgency indicated by this recording alone.",
+      "action": "No ECG-driven action required. Clinical assessment still governs management, since a normal ECG does not exclude all cardiac conditions."
+    },
+    {
+      "class_id": "MI",
+      "name": "Myocardial infarction",
+      "full_name": "Myocardial infarction (current or prior)",
+      "category": "ischemic",
+      "description": "Findings consistent with myocardial infarction, meaning heart muscle damage caused by interrupted blood supply. The pattern may reflect an acute event or an older, healed infarction.",
+      "ecg_signs": "Pathological Q waves, loss of R-wave progression across the chest leads, and ST-segment or T-wave changes in a territorial distribution matching a coronary artery.",
+      "urgency": "High priority. An acute infarction is a medical emergency; a prior infarction is not acute but carries ongoing cardiovascular risk.",
+      "action": "Correlate immediately with symptoms, timing and cardiac biomarkers. Seek urgent cardiology assessment if the presentation is acute."
+    },
+    {
+      "class_id": "STTC",
+      "name": "ST/T change",
+      "full_name": "ST-segment and T-wave changes",
+      "category": "repolarisation",
+      "description": "Abnormalities of the repolarisation phase, when the ventricles recover after contracting. These changes are sensitive but not specific: they may reflect ischaemia, electrolyte disturbance, drug effect or strain.",
+      "ecg_signs": "ST-segment depression or elevation, T-wave flattening or inversion, and other deviations of the ST segment or T wave from the baseline.",
+      "urgency": "Moderate priority. Significance depends heavily on the clinical context and on whether the changes are new.",
+      "action": "Compare with any previous ECG to determine whether the change is new. Correlate with symptoms, electrolytes and medication, and seek cardiology advice where ischaemia is suspected."
+    },
+    {
+      "class_id": "CD",
+      "name": "Conduction disturbance",
+      "full_name": "Conduction disturbance",
+      "category": "conduction",
+      "description": "Impaired propagation of the electrical impulse through the heart's conduction system. Depending on the level of the block, the delay may be benign or may threaten adequate ventricular activation.",
+      "ecg_signs": "Prolonged PR interval, widened QRS complex, bundle branch block morphology, or dropped beats where a P wave is not followed by a QRS complex.",
+      "urgency": "Variable. Isolated first-degree or bundle branch block is often benign; high-grade or complete block requires urgent attention.",
+      "action": "Determine the level and degree of the block. Review rate-slowing medication, and seek urgent cardiology assessment for high-grade block or symptoms such as syncope."
+    },
+    {
+      "class_id": "HYP",
+      "name": "Hypertrophy",
+      "full_name": "Ventricular or atrial hypertrophy",
+      "category": "structural",
+      "description": "Voltage and morphology criteria suggesting thickening or enlargement of a cardiac chamber, most often the left ventricle. This usually reflects chronic pressure or volume overload rather than an acute event.",
+      "ecg_signs": "Increased QRS voltage meeting established hypertrophy criteria, often with a strain pattern of ST depression and T-wave inversion in the lateral leads, and left axis deviation.",
+      "urgency": "Low urgency on the ECG alone, but it signals an underlying condition that merits investigation.",
+      "action": "Investigate the underlying cause, typically hypertension or valvular disease. Confirm chamber size with echocardiography, since ECG voltage criteria have limited accuracy."
+    }
+  ]
+}

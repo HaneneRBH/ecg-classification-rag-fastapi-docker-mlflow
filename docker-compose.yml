@@ -1,0 +1,43 @@
+# Layer 5 — Docker Compose for the CardioSignal API.
+#
+#   docker-compose up --build     start the API on http://localhost:8000
+#   docker-compose down            stop it
+#   docker-compose logs -f         follow the logs
+#
+# Volumes, and why:
+#   - checkpoints/  mounted read-only: the trained model is an artefact, not
+#     part of the image, so retraining does not require a rebuild.
+#   - data/         mounted read-write: holds the clinical rule base (read) and
+#     the SQLite history file (written), so predictions survive a restart.
+#   - the dataset   mounted read-only and OPTIONAL: only needed if you want to
+#     query ECGs by ecg_id. Comment it out to run on posted signals only.
+
+services:
+  api:
+    build: .
+    image: cardiosignal-api:latest
+    container_name: cardiosignal-api
+    ports:
+      - "8000:8000"
+    volumes:
+      # Trained model (read-only) — retrain on the host, restart the container.
+      - ./checkpoints:/app/checkpoints:ro
+      # Rule base + SQLite history (read-write).
+      - ./data:/app/data
+      # OPTIONAL: PTB-XL dataset, for /predict and /report by ecg_id.
+      # Edit the left-hand path to point at your extracted PTB-XL folder.
+      # - ./dataset:/app/dataset:ro
+    environment:
+      CARDIO_CKPT: /app/checkpoints/ecg_1dcnn_best.h5
+      CARDIO_DB: /app/data/cardio_history.db
+      # Uncomment together with the dataset volume above:
+      # CARDIO_DATA_ROOT: /app/dataset
+      # Point at a local Ollama instance for LLM-generated reports.
+      # On Linux use the host gateway; on Docker Desktop use host.docker.internal.
+      OLLAMA_HOST: http://host.docker.internal:11434
+      TF_CPP_MIN_LOG_LEVEL: "2"
+      TF_ENABLE_ONEDNN_OPTS: "0"
+    extra_hosts:
+      # Lets the container reach a local Ollama running on the host machine.
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

@@ -1,0 +1,98 @@
+name: CI
+
+# Layer 6 — Continuous integration.
+#
+# Runs on every push and pull request to main. Four jobs, ordered from
+# cheapest to most expensive, so a syntax error fails in seconds rather than
+# after a five-minute Docker build:
+#
+#   1. lint        — code style and syntax (ruff)
+#   2. validate    — the clinical rule base must be valid (5/5 classes)
+#   3. test        — unit tests on the pieces that need no dataset
+#   4. docker      — the image must build
+#
+# The dataset (3 GB) and the trained checkpoint are NOT in the repository, so
+# CI deliberately tests only what works without them. That is why the rule
+# base validator exits with a status code: it is CI-friendly by design.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: Check syntax and style
+        # E501 (line length) is relaxed: the code favours explanatory comments.
+        run: ruff check src/ app/ --ignore E501 --output-format=github
+
+  validate-rules:
+    name: Validate clinical rule base
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate ecg_rules.json
+        # Exits 1 if any rule is missing, malformed, or inconsistent with the
+        # class list used by the classifier.
+        run: python src/report/rules.py --validate
+
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    needs: [lint, validate-rules]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install test dependencies
+        # Only the light dependencies: no TensorFlow, no dataset needed for
+        # the report layer, which is what these tests cover.
+        run: pip install pytest requests
+
+      - name: Run tests
+        run: pytest tests/ -v
+
+  docker:
+    name: Build Docker image
+    runs-on: ubuntu-latest
+    needs: [lint, validate-rules]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: cardiosignal-api:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

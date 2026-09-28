@@ -1,0 +1,46 @@
+# Keep the build context small: everything here is excluded from the image.
+
+# Dataset — several GB, mounted as a volume instead of baked in.
+dataset/
+ptb-xl*/
+records100/
+records500/
+*.dat
+*.hea
+
+# Model checkpoints — mounted as a volume so retraining needs no rebuild.
+checkpoints/
+*.keras
+*.h5
+*.onnx
+
+# Results and plots — for the README, not needed at runtime.
+figures/
+results/
+mlruns/
+
+# Python artefacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# Local database (created inside the container)
+*.db
+
+# Git and editor files
+.git/
+.gitignore
+.github/
+.vscode/
+.idea/
+.spyproject/
+.DS_Store
+Thumbs.db
+
+# Docs
+README.md
+LICENSE

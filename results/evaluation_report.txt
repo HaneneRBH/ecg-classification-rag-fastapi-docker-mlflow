@@ -1,0 +1,72 @@
+========================================================================
+ ECG 1D-CNN — TEST SET EVALUATION REPORT
+========================================================================
+
+  Checkpoint       : ecg_1dcnn_best.keras
+  Parameters       : 125,125
+  Test ECGs        : 2198
+  Sampling rate    : 100 Hz
+  Macro AUROC      : 0.9089
+
+------------------------------------------------------------------------
+  Class        AUROC   Positives     Total
+------------------------------------------------------------------------
+  NORM        0.9457         963      2198
+  MI          0.9236         550      2198
+  STTC        0.9328         506      2198
+  CD          0.9145         496      2198
+  HYP         0.8281         262      2198
+------------------------------------------------------------------------
+
+Per-class classification report (threshold 0.5):
+
+--- NORM ---
+              precision    recall  f1-score   support
+
+    not NORM       0.93      0.83      0.87      1235
+        NORM       0.81      0.92      0.86       963
+
+    accuracy                           0.87      2198
+   macro avg       0.87      0.87      0.87      2198
+weighted avg       0.87      0.87      0.87      2198
+
+--- MI ---
+              precision    recall  f1-score   support
+
+      not MI       0.91      0.92      0.91      1648
+          MI       0.74      0.72      0.73       550
+
+    accuracy                           0.87      2198
+   macro avg       0.82      0.82      0.82      2198
+weighted avg       0.87      0.87      0.87      2198
+
+--- STTC ---
+              precision    recall  f1-score   support
+
+    not STTC       0.92      0.94      0.93      1692
+        STTC       0.79      0.72      0.75       506
+
+    accuracy                           0.89      2198
+   macro avg       0.85      0.83      0.84      2198
+weighted avg       0.89      0.89      0.89      2198
+
+--- CD ---
+              precision    recall  f1-score   support
+
+      not CD       0.89      0.97      0.93      1702
+          CD       0.85      0.59      0.70       496
+
+    accuracy                           0.88      2198
+   macro avg       0.87      0.78      0.81      2198
+weighted avg       0.88      0.88      0.88      2198
+
+--- HYP ---
+              precision    recall  f1-score   support
+
+     not HYP       0.91      0.97      0.94      1936
+         HYP       0.62      0.32      0.42       262
+
+    accuracy                           0.90      2198
+   macro avg       0.77      0.65      0.68      2198
+weighted avg       0.88      0.90      0.88      2198
+

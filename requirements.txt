@@ -1,0 +1,31 @@
+# CardioSignal MLOps — requirements
+# Tested on Python 3.11, Windows / Anaconda, CPU only.
+
+# Core
+numpy>=1.24,<2          # Anaconda's pandas/pyarrow are built for NumPy 1.x
+pandas==2.2.2            # pinned to avoid wfdb/Anaconda conflicts
+
+# Layer 1 — Data loading & signal processing
+wfdb==4.1.2              # PTB-XL WFDB reader (compatible with pandas 2.2.2)
+scipy>=1.10              # bandpass filtering
+matplotlib>=3.7          # ECG visualisation
+
+# Layer 2 — Classifier
+tensorflow>=2.15         # 1D-CNN (CPU-only)
+scikit-learn>=1.3         # metrics, train/test helpers
+
+# Layer 3 — Clinical report
+requests>=2.28           # talks to the local Ollama server
+# Ollama is a separate local app, not a pip package: https://ollama.com
+#   after install:  ollama pull llama3.2
+
+# Layer 4 - API
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.0
+
+# Layer 5 — Docker (no pip dependency)
+
+# Layer 6 - MLOps
+mlflow>=2.12             # experiment tracking + model registry
+pytest>=7.4              # unit tests (also run in CI)
